@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>湘江命运测试 — 烽火耀八桂</title>
+<meta name="description" content="课堂互动：以红军普通战士身份经历湘江战役的关键抉择" />
+<style>
+  :root{
+    --accent:#b30000;
+    --muted:#6b6b6b;
+    --panel-bg:rgba(255,255,255,0.94);
+    --maxw:780px;
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Microsoft YaHei",Arial;
+    background:#f5efe6;
+  }
+
+  /* 背景：使用你文件夹内的 IMG_6133.jpeg */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:url('./IMG_6133.jpeg');
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+    opacity:0.18;
+    filter:grayscale(15%) contrast(0.9);
+    z-index:0;
+  }
+
+  .wrap{
+    position:relative; z-index:2;
+    max-width:var(--maxw);
+    margin:20px auto; padding:18px;
+    background:var(--panel-bg);
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  }
+  header{display:flex;align-items:center;gap:12px;}
+  header h1{margin:0;font-size:20px;color:var(--accent);letter-spacing:1px;}
+  header p{margin:0;color:var(--muted);font-size:13px}
+  .lead{
+    margin:12px 0 16px;
+    color:#333; font-size:15px; line-height:1.65;
+  }
+
+  .cover-image{
+    width:100%; height:160px;
+    object-fit:cover; border-radius:8px; margin-bottom:12px;
+    box-shadow:inset 0 -20px 40px rgba(0,0,0,0.06);
+  }
+
+  .meta{
+    display:flex; justify-content:space-between; align-items:center;
+    color:var(--muted); font-size:13px; margin-bottom:10px;
+  }
+  .counter{font-weight:700;color:var(--accent);}
+
+  .q{margin:14px 0;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.05);background:white;}
+  .q h3{margin:0 0 8px;font-size:15px}
+  .opts{display:flex;flex-direction:column;gap:8px}
+  button.opt{
+    padding:10px 12px; border-radius:8px;
+    border:1px solid rgba(0,0,0,0.06); background:white;
+    text-align:left; cursor:pointer; font-size:15px
+  }
+  button.opt:hover{box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+  .btn{
+    display:inline-block;padding:12px 16px;border-radius:10px;
+    border:none;background:var(--accent);color:#fff;
+    font-weight:600;cursor:pointer;margin-top:12px;width:100%;
+  }
+
+  .result{
+    display:none;margin-top:12px;padding:14px;border-radius:10px;
+    background:linear-gradient(180deg,#fff6f6,#fff);
+    border:1px solid rgba(179,0,0,0.1);
+  }
+  .result h2{margin:0 0 8px;font-size:18px;color:var(--accent)}
+  .hint{font-size:13px;color:var(--muted);margin-top:8px}
+  footer{margin-top:14px;color:#888;font-size:12px;text-align:center}
+
+  @media(max-width:420px){
+    .wrap{margin:8px;padding:12px}
+    .cover-image{height:120px}
+  }
+</style>
+</head>
+
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <div>
+        <h1>烽火耀八桂 · 湘江命运测试</h1>
+        <p>以普通红军的视角，走近那段最沉痛的历史</p>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div class="meta">
+          <span style="font-size:12px;color:#777">中国近现代史纲要 · 第7小组</span>
+          <span class="counter" id="count">0</span>
+        </div>
+        <div style="font-size:11px;color:#999">每题点选一次即可</div>
+      </div>
+    </header>
+
+    <img alt="桂林山水与革命" class="cover-image" src="./IMG_6133.jpeg" />
+
+    <p class="lead">
+      让我们花不到一分钟，以一名普通红军的身份，  
+      在追击、寒风与炮声中，做完湘江战役中最艰难的六个决定。  
+      <br><br>
+      你会发现：  
+      有些时候，决定生死的不是“正确答案”，  
+      而是环境、体能、队形…以及一点点命。  
+      <br><br>
+      这是一个小小的测试，却希望让那段冰冷的数字，  
+      在你心里变成更真实的重量。
+    </p>
+
+    <div id="quiz-area"><div id="question-container"></div></div>
+
+    <div id="result" class="result"></div>
+
+    <button id="restart" class="btn" style="display:none" onclick="location.reload()">重新体验</button>
+
+    <p class="hint">真实历史：中央红军出发约86,000人，湘江之后仅30,000余人继续长征。</p>
+
+    <footer>© 第七小组 · 制作人：闫楷睿、苏懿璠</footer>
+  </div>
+
+<script>
+const COVER_IMAGE = './IMG_6133.jpeg';
+
+const QUESTIONS = [
+  { q:"Q1｜长征前你的体能状况如何？",
+    opts:[
+      {txt:"体力很好，连续长行没问题", v:3},
+      {txt:"体能一般，但咬牙能跟上", v:2},
+      {txt:"体力偏弱，但意志较强", v:1}
+    ]
+  },
+  { q:"Q2｜面临封锁，你倾向的突围方式？",
+    opts:[
+      {txt:"直接强渡，速度压倒一切", v:3},
+      {txt:"绕远找更稳妥的渡口", v:2},
+      {txt:"先固守拖住敌人", v:1}
+    ]
+  },
+  { q:"Q3｜敌机低空扫射时你会？",
+    opts:[
+      {txt:"立即分散，降低集中风险", v:3},
+      {txt:"找掩体趴下等待", v:2},
+      {txt:"原地保持不动", v:1}
+    ]
+  },
+  { q:"Q4｜粮食紧缺，你会怎么做？",
+    opts:[
+      {txt:"先让给伤员，自己少吃", v:1},
+      {txt:"留一点维持体力", v:2},
+      {txt:"服从组织统一分配", v:3}
+    ]
+  },
+  { q:"Q5｜体力耗尽，你会？",
+    opts:[
+      {txt:"硬撑着跟着主力走", v:3},
+      {txt:"短暂原地回气后追赶", v:2},
+      {txt:"彻底停下等待救援", v:1}
+    ]
+  },
+  { q:"Q6｜战友受伤时你会？",
+    opts:[
+      {txt:"背起他一起走", v:1},
+      {txt:"分口粮扶一段路", v:2},
+      {txt:"交给组织处理", v:3}
+    ]
+  }
+];
+
+const RESULTS = [
+  {
+    minScore:15,
+    title:"你的生存率 ≈ 45%｜冷静型战士",
+    text:"你体能可靠、判断稳妥，知道在混乱中如何减少风险。湘江的火力不会因此温柔，但你确实比大多数人有更高的机会穿过去。"
+  },
+  {
+    minScore:10,
+    title:"你的生存率 ≈ 27%｜普通红军",
+    text:"你的选择很像当年大多数红军战士：勇气与本能交织、坚持与犹疑并存。生死往往不是个人决定，而是形势决定。"
+  },
+  {
+    minScore:0,
+    title:"你的生存率 ≈ 9%｜赤诚但危险的战士",
+    text:"你愿意让粮、愿意背人、愿意停下等别人。善良在和平年代是美德，在湘江意味着把活下去的机会让给别人。即便如此，它依然令人敬佩。"
+  }
+];
+
+document.querySelector('.cover-image').src = COVER_IMAGE;
+
+let idx=0, totalScore=0;
+let participation = Number(sessionStorage.getItem('participation_count') || 0);
+document.getElementById('count').innerText = participation;
+
+function renderQuestion(i){
+  const item = QUESTIONS[i];
+  const qc = document.getElementById('question-container');
+  qc.innerHTML = '';
+
+  const card = document.createElement('div');
+  card.className = 'q';
+  card.innerHTML = `<h3>${item.q}</h3>`;
+
+  const opts = document.createElement('div');
+  opts.className = 'opts';
+  item.opts.forEach((o,j)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerText=`${String.fromCharCode(65+j)}. ${o.txt}`;
+    btn.onclick=()=>chooseOption(o.v);
+    opts.appendChild(btn);
+  });
+  card.appendChild(opts);
+  qc.appendChild(card);
+}
+
+function chooseOption(v){
+  totalScore+=v;
+  idx++;
+  if(idx < QUESTIONS.length) renderQuestion(idx);
+  else showResult();
+}
+
+function showResult(){
+  participation++;
+  sessionStorage.setItem('participation_count', participation);
+  document.getElementById('count').innerText = participation;
+
+  const rdiv=document.getElementById('result');
+  let res = RESULTS.find(r=>totalScore>=r.minScore) || RESULTS[2];
+
+  rdiv.style.display='block';
+  rdiv.innerHTML=`
+    <h2>${res.title}</h2>
+    <p style="margin-top:8px">${res.text}</p>
+    <p style="margin-top:12px;color:#666;font-size:13px">湘江战役损失超过60%，是长征途中最惨烈的一役。</p>
+  `;
+  document.getElementById('restart').style.display='block';
+
+  setTimeout(()=>{ rdiv.scrollIntoView({behavior:'smooth'}); },120);
+}
+
+renderQuestion(0);
+</script>
+</body>
+</html>
